@@ -68,7 +68,11 @@ module Travis
         end
 
         def handle_event(event, payload)
-          Travis.run_service(:update_job, event: event.to_s.split(':').last, data: payload)
+          if event == 'build:abort'
+            Travis.run_service(:update_ddtf_build, event: event.to_s.split(':').last, data: payload)
+          else
+            Travis.run_service(:update_job, event: event.to_s.split(':').last, data: payload)
+          end
         end
 
         def enqueue_jobs
